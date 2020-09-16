@@ -1,22 +1,43 @@
 import os
 import csv
 
-from models.classes import Person, Preference, Round, Drink
-from models.persist import write_prefs, read_rows, write_row
+from models.persistdb import db, query, update
 
+
+# from models.classes import Person, Preference, Round, Drink
+
+# from models.persist import write_prefs, read_rows, write_row
+mydb = db()
+
+get_all_people = "SELECT * FROM person"
+get_all_drinks= "SELECT * FROM drink"
+get_prefs = """
+SELECT person.id, person.name, drink.id as drink_id
+FROM person
+LEFT JOIN drink ON drink.id = person.name
+
+"""
+
+people = query(mydb, get_all_people)
+drinks = query(mydb, get_all_drinks)
+prefs = query(mydb, get_prefs)
 
 
 
 
 def save_people():
-    write_row("people.csv", people, ["id", "name"])
+    update(mydb, people )
 
 
 def save_drinks():
-    write_row("drinks.csv", drinks, ["id","name"])
+    update(mydb, drinks)
 
 def save_prefs():
-     write_prefs('prefs.csv', prefs, ["id", "name"])
+    row =[]
+    drink_id = row[0]
+    person_id = row[1]
+    add_to_prefs =  f"UPDATE person SET drink = {drink_id} WHERE id = {person_id}"
+    update(mydb, add_to_prefs)
     
 
 
@@ -25,63 +46,63 @@ def save_prefs():
 
 
 
-def get_prefs():
+# def get_prefs():
     
-    data = {}
-    rows = read_rows("prefs.csv")
-    for row in rows:
+#     data = {}
+#     rows = read_rows("prefs.csv")
+#     for row in rows:
 
             
          
-        person = people[int(row[0])]
+#         person = people[int(row[0])]
 
           
-        drink = drinks[int(row[1])]
+#         drink = drinks[int(row[1])]
 
           
-        saved_prefs = Preference(person, drink)
+#         saved_prefs = Preference(person, drink)
 
           
-        data.update({person.id:saved_prefs})
+#         data.update({person.id:saved_prefs})
             
         
-    return data
+#     return data
     
 
-def get_people():
-    data = []
+# def get_people():
+#     data = []
 
-    rows= read_rows("people.csv")
+#     rows= read_rows("people.csv")
 
     
-    for row in rows:
-        saved_person = Person(int(row[0]), row[1])
+#     for row in rows:
+#         saved_person = Person(int(row[0]), row[1])
 
         
-        data.append(saved_person)
+#         data.append(saved_person)
         
-    return data
+#     return data
 
-def get_drinks():
+# def get_drinks():
 
-    data = []
+#     data = []
 
-    rows= read_rows("drinks.csv")
-
-    
-    for row in rows:
-        saved_drink = Drink(int(row[0]), row[1])
-
-        data.append(saved_drink)
-    return data
-
-def create_pref(person: Person, drink: Drink):
-    
-    
-    new_dict_item = {person.name: Preference(person, drink)}
+#     rows= read_rows("drinks.csv")
 
     
-    prefs.update(new_dict_item)
+#     for row in rows:
+#         saved_drink = Drink(int(row[0]), row[1])
+
+#         data.append(saved_drink)
+#     return data
+
+def create_pref(person, drink):
+    new_pref = f"INSERT INTO prefs (person_id, drink_id) VALUES ('{person}', '{drink}')"
+    
+    prefs.append(person, drink)
+
+    return new_pref
+
 
 
 
@@ -89,12 +110,13 @@ def save_and_exit():
     save_people()
     save_drinks()
     save_prefs()
+    exit()
 
 
 
-people = get_people()
-drinks = get_drinks()
-prefs = get_prefs()
+# people = get_people()
+# drinks = get_drinks()
+# prefs = get_prefs()
 
 
 def clearScreen():
@@ -103,52 +125,52 @@ def clearScreen():
 
 
 
-def print_list(the_list, title, is_dictionary=False):
+def print_list(the_list, title):
     clearScreen()
     print(f"+===============+\n\n | {title.upper()} \n\n=================|") 
-    
-    
     if len(the_list) == 0:
-         
-        
-
         
         return
     items = the_list
-
-    
-    if is_dictionary == True:
-
-        
-        items = the_list.values()
-
     
     for item in items:
-
-        
+   
         print(item)
 
 
 def create_person(name: str):
-    
-    new_person = Person(len(people), name)
+        
+    new_person = f"INSERT INTO person (name) VALUES ('{name}')"
 
-    people.append(new_person)
+    people.append(name)
 
-    print("You have been assigned an ID number please note this down ")
 
     return new_person
+    
+    # new_person = Person(len(people), name)
+
+    # people.append(new_person)
+
+    # print("You have been assigned an ID number please note this down ")
+
+    # return new_person
 
 
     
 
 def create_drink(name: str):
-    new_drink = Drink(len(drinks), name)
 
-    drinks.append(new_drink)
+    new_drink = f"INSERT INTO person (name) VALUES ('{name}')"
 
+    drinks.append(name)
 
     return new_drink
+    # new_drink = Drink(len(drinks), name)
+
+    # drinks.append(new_drink)
+
+
+    # return new_drink
     
 
     
@@ -185,7 +207,7 @@ def app():
         elif option == 2:
             print_list(drinks, 'drinks')
         elif option == 3:
-            print_list(prefs, "prefs", True)
+            print_list(prefs, "prefs")
         elif option == 4:
             name = input("Please enter name")
             create_person(name)
@@ -215,7 +237,7 @@ def app():
 
             create_pref(chosen_person, chosen_drink)
             
-            print_list(prefs, "prefs", True)
+            print_list(prefs, "prefs")
 
                 
                     
@@ -227,4 +249,6 @@ def app():
             
 if __name__ == '__main__':
     app()
-    save_and_exit()
+
+   
+   

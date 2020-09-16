@@ -1,0 +1,18 @@
+
+
+
+CREATE TABLE person (id INT PRIMARY KEY, first_name VARCHAR(100))
+
+CREATE TABLE drink (id INT PRIMARY KEY, first_name VARCHAR(100))
+
+CREATE TABLE prefs (id INT PRIMARY KEY, id INT PRIMARY KEY)
+
+
+
+
+
+
+
+
+
+
