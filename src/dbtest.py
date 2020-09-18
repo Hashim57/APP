@@ -15,17 +15,15 @@ mycursor = mydb.cursor()
 
 
 
-mycursor.executemany("Select id, name FROM person, drink" )
+mycursor.execute("Select id, name FROM person" )
 rows = mycursor.fetchall()
 
 for row in rows:
         print("ID -" + str(row[0]) + ", Name -" + row[1] )
 
 sql = "INSERT INTO person (id, name) VALUES (%s, %s)"
-sql = "INSERT INTO drink (id, name) VALUES (%s, %s)"
-sql = "INSERT INTO prefs (id, id) VALUES (%s, %s)"
-val = ("11", "John")
-val = ("10", "coconuty")
+
+val = ("12", "Gary")
 mycursor.execute(sql, val)
 
 mydb.commit()

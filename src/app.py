@@ -22,21 +22,24 @@ people = query(mydb, get_all_people)
 drinks = query(mydb, get_all_drinks)
 prefs = query(mydb, get_prefs)
 
-
+mycursor = mydb.cursor()
 
 
 def save_people():
-    update(mydb, people )
+    
+    update(mydb, people)
 
 
 def save_drinks():
-    update(mydb, drinks)
+   
+    update(mydb, drinks )
 
 def save_prefs():
-    row =[]
-    drink_id = row[0]
-    person_id = row[1]
-    add_to_prefs =  f"UPDATE person SET drink = {drink_id} WHERE id = {person_id}"
+    col= []
+    person_id= col[0]
+    drink_id = col[1]
+    add_to_prefs = f'UPDATE person SET drink = {drink_id} WHERE id = {person_id}'
+    
     update(mydb, add_to_prefs)
     
 
@@ -97,11 +100,19 @@ def save_prefs():
 #     return data
 
 def create_pref(person, drink):
-    new_pref = f"INSERT INTO prefs (person_id, drink_id) VALUES ('{person}', '{drink}')"
+    try:
     
-    prefs.append(person, drink)
+        query = "INSERT INTO person (perosn_id, drink_id) VALUES (%s, %s)"
+        values = ([(person, drink)])
+        
+        mycursor.execute(query, values)
 
-    return new_pref
+        mydb.commit()
+    except:
+        print("Failed to add pref")
+    
+    
+        
 
 
 
@@ -138,14 +149,20 @@ def print_list(the_list, title):
         print(item)
 
 
-def create_person(name: str):
+def insert_person(data):
+  
+    query = "INSERT INTO person (name) VALUES (%s)"
+    
+    recordTuple = (data) 
+        # people.append(person)
         
-    new_person = f"INSERT INTO person (name) VALUES ('{name}')"
+    mycursor.execute(query, recordTuple)
 
-    people.append(name)
+    mydb.commit()
 
+    mycursor.close()
 
-    return new_person
+    
     
     # new_person = Person(len(people), name)
 
@@ -158,13 +175,18 @@ def create_person(name: str):
 
     
 
-def create_drink(name: str):
+def insert_drink(data):
+    
+    query = "INSERT INTO drink (name) VALUES (%s)"
+    
+    # drinks.append(drink)
+    
+    recordTuple = (data)
+    mycursor.execute(query, recordTuple)
 
-    new_drink = f"INSERT INTO person (name) VALUES ('{name}')"
+    mydb.commit()
 
-    drinks.append(name)
-
-    return new_drink
+    mycursor.close()
     # new_drink = Drink(len(drinks), name)
 
     # drinks.append(new_drink)
@@ -210,10 +232,10 @@ def app():
             print_list(prefs, "prefs")
         elif option == 4:
             name = input("Please enter name")
-            create_person(name)
+            insert_person([(name)])
         elif option == 5:
             name = input("Please enter drink")
-            create_drink(name)
+            insert_drink([(name)])
         elif option == 6:
         
             chosen_person = None
@@ -237,7 +259,9 @@ def app():
 
             create_pref(chosen_person, chosen_drink)
             
+            
             print_list(prefs, "prefs")
+            
 
                 
                     
