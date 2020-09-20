@@ -11,16 +11,16 @@ mydb = db()
 
 get_all_people = "SELECT * FROM person"
 get_all_drinks= "SELECT * FROM drink"
-get_prefs = """
-SELECT person.id, person.name, drink.id as drink_id
-FROM person
+get_people_with_prefs = """
+SELECT person.id, person.name 
+FROM person 
 LEFT JOIN drink ON drink.id = person.name
 
 """
 
 people = query(mydb, get_all_people)
 drinks = query(mydb, get_all_drinks)
-prefs = query(mydb, get_prefs)
+prefs = query(mydb, get_people_with_prefs)
 
 mycursor = mydb.cursor()
 
@@ -35,12 +35,8 @@ def save_drinks():
     update(mydb, drinks )
 
 def save_prefs():
-    col= []
-    person_id= col[0]
-    drink_id = col[1]
-    add_to_prefs = f'UPDATE person SET drink = {drink_id} WHERE id = {person_id}'
     
-    update(mydb, add_to_prefs)
+    update(mydb, prefs)
     
 
 
@@ -99,17 +95,45 @@ def save_prefs():
 #         data.append(saved_drink)
 #     return data
 
-def create_pref(person, drink):
+def create_pref():
+    people = query(mydb, get_all_people)
+    print_list(people, "People" )
     try:
-    
-        query = "INSERT INTO person (perosn_id, drink_id) VALUES (%s, %s)"
-        values = ([(person, drink)])
-        
-        mycursor.execute(query, values)
+        person_id = int(input("Enter Name ID: "))
 
-        mydb.commit()
     except:
-        print("Failed to add pref")
+        print("Please try again")
+    drinks = query(mydb, get_all_drinks)
+    print_list(drinks, "Drinks")
+
+    try:
+        drink_id = int(input("Enter Drink ID: "))
+    except:
+        print("Please try again")
+
+    insert_query = f"INSERT INTO prefs (person_id, drink_id) VALUES ('{person_id}', '{drink_id}')"
+    
+    # drinks.append(drink)
+    
+    mycursor.execute(insert_query)
+
+    mydb.commit()
+
+    mycursor.close()
+
+    
+    # add_to_prefs = f"UPDATE prefs SET drink_id = {drink_id} WHERE person_id = {person_id}"
+    # update(mydb, add_to_prefs)
+    
+
+        
+    
+        
+            
+    
+   
+        
+    
     
     
         
@@ -143,6 +167,7 @@ def print_list(the_list, title):
         
         return
     items = the_list
+
     
     for item in items:
    
@@ -237,27 +262,29 @@ def app():
             name = input("Please enter drink")
             insert_drink([(name)])
         elif option == 6:
+            create_pref()
+
         
-            chosen_person = None
-            chosen_drink = None
+            # chosen_person = None
+            # chosen_drink = None
 
-            print_list(people, "People")
-            while chosen_person == None:
-                try:
-                    person_idx = int(input("\nChoose a person:"))
-                    chosen_person = people[person_idx]
-                except:
-                    print("Please Try Again")
+            # print_list(people, "People")
+            # while chosen_person == None:
+            #     try:
+            #         person_idx = int(input("\nChoose a person:"))
+            #         chosen_person = people[person_idx]
+            #     except:
+            #         print("Please Try Again")
 
-            print_list(drinks, "Drinks" )
-            while chosen_drink == None:
-                try:
-                    drink_idx = int(input("\nChoose a drink:"))
-                    chosen_drink = drinks[drink_idx]
-                except:
-                    print("Please try again")   
+            # print_list(drinks, "Drinks" )
+            # while chosen_drink == None:
+            #     try:
+            #         drink_idx = int(input("\nChoose a drink:"))
+            #         chosen_drink = drinks[drink_idx]
+            #     except:
+            #         print("Please try again")   
 
-            create_pref(chosen_person, chosen_drink)
+            # create_pref([(person_idx, drink_idx)])
             
             
             print_list(prefs, "prefs")
