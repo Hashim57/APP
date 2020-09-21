@@ -99,7 +99,7 @@ def create_pref():
     people = query(mydb, get_all_people)
     print_list(people, "People" )
     try:
-        person_id = int(input("Enter Name ID: "))
+        person_id = int(input("Choose a person: "))
 
     except:
         print("Please try again")
@@ -107,14 +107,14 @@ def create_pref():
     print_list(drinks, "Drinks")
 
     try:
-        drink_id = int(input("Enter Drink ID: "))
+        drink_id = int(input("Choose a drink: "))
     except:
         print("Please try again")
 
     insert_query = f"INSERT INTO prefs (person_id, drink_id) VALUES ('{person_id}', '{drink_id}')"
     
     # drinks.append(drink)
-    
+   
     mycursor.execute(insert_query)
 
     mydb.commit()
@@ -263,6 +263,7 @@ def app():
             insert_drink([(name)])
         elif option == 6:
             create_pref()
+            print_list(prefs, "prefs")
 
         
             # chosen_person = None
@@ -284,13 +285,7 @@ def app():
             #     except:
             #         print("Please try again")   
 
-            # create_pref([(person_idx, drink_idx)])
-            
-            
-            print_list(prefs, "prefs")
-            
-
-                
+            # create_pref([(person_idx, drink_idx)])      
                     
         elif option == 7:
 
