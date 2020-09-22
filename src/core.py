@@ -1,10 +1,10 @@
 
-class Drink:
+class Person:
     pass
 
 
 
-def print_item(item = Drink):
+def print_item(item = Person):
         print(item)
 
     

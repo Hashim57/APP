@@ -1,29 +1,23 @@
 
 import unittest
-from src.models.classes import Person, Drink
+from src.app import insert_person
 
 
-class Test_Models(unittest.TestCase):
-    def test_person(self):
+class Test_function(unittest.TestCase):
+    def test_insert_person(self):
 
-
+        name =[]
     
-        expected = {"name":"John", "id":0}
+        expected = (name)
 
-        actual = Person(0, "John").__dict__
+        result = insert_person([(name)])
 
+        
+        self.assertEqual(expected, result )
 
-        self.assertEqual(expected, actual)
-
-
-
-    def test_drink(self):
-        expected = {"name":"Desparado", "id":3}
-
-        actual = Drink(3, "Desparado").__dict__
+        
 
 
-        self.assertEqual(expected, actual)
 
 
     

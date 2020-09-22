@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch, Mock
-from src.core import print_item, Drink
+
+from core import print_item, Person
 
 
 class Test_core(unittest.TestCase):
@@ -9,11 +10,9 @@ class Test_core(unittest.TestCase):
     def test_print_item(self, mock_print):
 
 
-        mock_item = Mock("Pina Colada")
+        mock_item = Mock("Graham")
 
         print_item(mock_item)
-
-    
 
 
         self.assertEqual(mock_print.call_count, 1) 
@@ -27,5 +26,3 @@ class Test_core(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
-

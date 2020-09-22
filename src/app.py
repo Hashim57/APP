@@ -1,5 +1,6 @@
 import os
 import csv
+import pymysql
 
 from models.persistdb import db, query, update
 
@@ -14,7 +15,7 @@ get_all_drinks= "SELECT * FROM drink"
 get_people_with_prefs = """
 SELECT person.id, person.name 
 FROM person 
-LEFT JOIN drink ON drink.id = person.name
+LEFT JOIN drink ON drink.id = person.name;
 
 """
 

@@ -1,6 +1,7 @@
 
 import mysql
 import mysql.connector
+import unittest
 
 
 
@@ -23,7 +24,7 @@ for row in rows:
 
 sql = "INSERT INTO person (id, name) VALUES (%s, %s)"
 
-val = ("12", "Gary")
+val = ("27", "Paul")
 mycursor.execute(sql, val)
 
 mydb.commit()
@@ -33,3 +34,5 @@ print(mycursor.rowcount, "record inserted.")
 
 mycursor.close()
 
+if __name__ == "__main__":
+    unittest.main()
